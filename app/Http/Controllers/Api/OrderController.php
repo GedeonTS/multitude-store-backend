@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 use App\Models\Order;
+use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Validator;
 
 class OrderController extends Controller
 {
@@ -36,8 +37,6 @@ class OrderController extends Controller
         $validator = Validator::make($request->all(), [
             'user_id' => 'required|integer',
             'total_amount' => 'required|integer',
-            'order_date' => 'required|timestamp',
-            'status' => 'required|string'
         ]);
 
         if ($validator->fails()) {
@@ -49,7 +48,6 @@ class OrderController extends Controller
             $order = Order::create([
                 'user_id' => $request->user_id,
                 'total_amount' => $request->total_amount,
-                'order_date' => $request->order_date,
                 'status' => $request->status,
             ]);
         }
@@ -67,4 +65,45 @@ class OrderController extends Controller
             ], 500);
         }
     }
+
+    public function show($id)
+    {
+        $order = Order::find($id);
+        if ($order) {
+            return response()->json([
+                'status' => 200,
+                'order' => $order
+            ], 200);
+        } else {
+            return response()->json([
+                'status' => 404,
+                'message' => 'Order Not Found'
+            ], 404);
+        }
+    }
+
+    public function edit($id)
+    {
+        $order = Order::find($id);
+        if ($order) {
+            return response()->json([
+                'status' => 200,
+                'order' => $order
+            ], 200);
+        } else {
+            return response()->json([
+                'status' => 404,
+                'message' => 'Order Not Found'
+            ], 404);
+        }
+    }
+
+    public function update(Request $request, int $id){
+        $validator = Validator::make($request->all(), [
+            'user_id' => 'required|integer',
+            'total_amount' => 'required|integer',
+        ]);
+        
+    }
+
 }
