@@ -12,7 +12,7 @@ class OrderController extends Controller
     public function index()
     {
         $orders = Order::all();
-        if ($orders->count() > 0) {
+        if ($orders -> count() > 0) {
             return response()->json(
                 [
                     'status' => 200,
