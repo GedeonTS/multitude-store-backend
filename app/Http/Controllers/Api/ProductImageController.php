@@ -11,12 +11,12 @@ class ProductImageController extends Controller
 {
     public function index()
     {
-        $products = ProductImage::all();
-        if ($products->count() > 0) {
+        $productImages = ProductImage::all();
+        if ($productImages->count() > 0) {
             return response()->json(
                 [
                     'status' => 200,
-                    'products' => $products
+                    'product Images' => $productImages
                 ],
                 200
             );
@@ -34,7 +34,7 @@ class ProductImageController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'product_id' => 'required|string',
+            'product_id' => 'required|integer',
             'image_url' => 'required|string'
         ]);
 
@@ -64,19 +64,26 @@ class ProductImageController extends Controller
         }
     }
 
-    public function show($id)
+    public function show($product_id)
     {
-        $productImage = ProductImage::find($id);
-        if ($productImage) {
-            return response()->json([
-                'status' => 200,
-                'productImage' => $productImage
-            ], 200);
+        //get an array of product images with the given product id
+        $productImages = ProductImage::where('product_id', $product_id)->get();
+        if ($productImages->count() > 0) {
+            return response()->json(
+                [
+                    'status' => 200,
+                    'productImages' => $productImages
+                ],
+                200
+            );
         } else {
-            return response()->json([
-                'status' => 404,
-                'message' => 'ProductImage Not Found'
-            ], 404);
+            return response()->json(
+                [
+                    'status' => 404,
+                    'message' => "No Records Found"
+                ],
+                200
+            );
         }
     }
 
@@ -91,7 +98,7 @@ class ProductImageController extends Controller
         } else {
             return response()->json([
                 'status' => 404,
-                'message' => 'ProductImage Not Found'
+                'message' => 'Product Image Not Found'
             ], 404);
         }
     }
@@ -99,7 +106,7 @@ class ProductImageController extends Controller
     public function update(Request $request, int $id)
     {
         $validator = Validator::make($request->all(), [
-            'product_id' => 'required|string',
+            'product_id' => 'required|integer',
             'image_url' => 'required|string'
         ]);
 
@@ -119,7 +126,7 @@ class ProductImageController extends Controller
 
                 return response()->json([
                     'status' => 200,
-                    'message' => 'ProductImage updated Successfully',
+                    'message' => 'Product Image updated Successfully',
                     'productImage' => $productImage
                 ], 200);
             } else {
@@ -139,14 +146,14 @@ class ProductImageController extends Controller
             return response()->json(
                 [
                     'status' => 200,
-                    'message' => 'ProductImage deleted successfully'
+                    'message' => 'Product Image deleted successfully'
                 ]
             );
         } else {
             return response()->json(
                 [
                     'status' => 404,
-                    'message' => 'ProductImage not found'
+                    'message' => 'Product Image not found'
                 ]
             );
         }
